@@ -11,6 +11,7 @@ public class satisfiabilitychecker {
         Scanner sc = new Scanner(file);
         int numOfVariables = 0;
         int numOfClauses = 0;
+        //Functionality to store assignments and assignments.
         ArrayList<Integer> givenAssignments = new ArrayList<Integer>();
         while (sc.hasNextLine()) {
             String line = sc.nextLine();
@@ -24,24 +25,48 @@ public class satisfiabilitychecker {
                         if (num != 0) {
                             givenAssignments.add(num);
                         }
-                    } catch (NumberFormatException ignored)
-                    {
-
-                    }
-
+                    } catch (NumberFormatException ignored) {}
+        //End Functionality to store assignments and assignments.
                 }
             }
         }
-
-        int[] possibleAssignments = new int[numOfVariables];
-        Arrays.fill(possibleAssignments, 0);
-
+        System.out.println(givenAssignments);
 
     }
     public int setClauses(int numOfClauses, int numOfVariables) {
         int[] clauses = new int[numOfClauses];
-
+        //done
         return 0;
+    }
+
+    public ArrayList<Integer> createBinary(int numOfVariables) {
+        //fill array of 0's
+        ArrayList<Integer> startingAssignments = new ArrayList<Integer>();
+        for (int i = 0; i < numOfVariables; i++) {
+            startingAssignments.add(0);
+        }
+        return startingAssignments;
+    }
+    public ArrayList<Integer> generateBinaryAssignment(ArrayList<Integer> startingAssignment) {
+        int lastIndexOfZero = startingAssignment.lastIndexOf(0);
+        startingAssignment.set(lastIndexOfZero, 1);
+        int lastIndexOfOne = startingAssignment.lastIndexOf(1);
+        for(int i = lastIndexOfOne; i < startingAssignment.size(); i++) {
+            startingAssignment.set(i, 0);
+        }
+        return startingAssignment;
+    }
+
+    public ArrayList<Boolean> convertBinaryToTrueOrFalse(ArrayList<Integer> binaryArray) {
+        ArrayList <Boolean> trueOrFalseArray = new ArrayList<>();
+        for (int i = 0; i < binaryArray.size(); i++) {
+            if (binaryArray.get(i) == 0) {
+                trueOrFalseArray.add(false);
+            } else {
+                trueOrFalseArray.add(true);
+            }
+        }
+        return trueOrFalseArray;
     }
     /*in order to generate possible combinations, considering using binary addition.
     * 0000 -> false false false false
@@ -62,8 +87,8 @@ public class satisfiabilitychecker {
     * 111
     * Note 1: As long as there is one true in a clause it will always evaluate to true.
     * Note 2: If any clause evaluates to false move to next, because it will always be false.
-    * Note 3: first step create a binary number of n(number of variables).
-    * Note 3: Map each index in the array to a variable. I.e [var1, var2, var3, var4]
+    * Note 3: first step create a binary number of n(number of variables).x
+    * Note 3: Map each index in the array to a variable. I.e [var1, var2, var3, var4] x
     * Note 4: Convert binary number in the array to true and false (array?)
     * Note 5: Check clause to each number specified in file (if number is less than 1, multiple my -1 then check accordingly.
     * */
