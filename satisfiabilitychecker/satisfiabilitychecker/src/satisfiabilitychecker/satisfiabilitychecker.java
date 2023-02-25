@@ -30,6 +30,25 @@ public class satisfiabilitychecker {
 
         return 0;
     }
+    /*in order to generate possible combinations, considering using binary addition.
+    * 0000 -> false false false false
+    * 0001 -> false false false true
+    * 0011 -> false false true true
+    * 0111 -> flase true true.
+    * Start with all zeros and stop when there's all 1's in the amount of variables
+    * We are adding 1 at a time.
+    * When adding a 1, flip the right most zero to a 1, and everything after flip to a zero
+    * Now assignment can be stored in integer.
+    * 000
+    * 001
+    * 010
+    * 011
+    * 100
+    * 101
+    * 110
+    * 111
+    *
+    * */
 }
 
 
