@@ -45,68 +45,57 @@ public class satisfiabilitychecker {
             }
         }
         reader.close();
-        int variationCounter = 0;
-        int maxVariations = calculateMaxVariations(numOfVariables);
+
         System.out.println(givenAssignments);
         boolean assignmentNotSatisfied;
         ArrayList<Integer> startingBinary = createBinaryOfN(numOfVariables);
         assignmentNotSatisfied = checkClauses(numOfClauses, convertBinaryToTrueOrFalse(startingBinary), givenAssignments, listOfClauseLengths);
-        variationCounter++;
-        if(!assignmentNotSatisfied) {
-            displayClause(convertBinaryToTrueOrFalse(createBinaryOfN(numOfVariables)));
-        }
-
-
-        while(assignmentNotSatisfied) {
-            variationCounter++;
-            if (variationCounter == maxVariations + 1) {
-                System.out.println("Not Satisfiable");
-                break;
-            }
-            System.out.println("This is check:" + variationCounter);
-            ArrayList <Integer> newBinaryAssignment = generateBinaryAssignment(startingBinary);
-            ArrayList <Boolean> tOrFAssignment = convertBinaryToTrueOrFalse(newBinaryAssignment);
-            assignmentNotSatisfied = (checkClauses(numOfClauses,tOrFAssignment,givenAssignments, listOfClauseLengths));
-            if (!assignmentNotSatisfied) {
-                System.out.println(tOrFAssignment);
-                break;
-            }
-            startingBinary = new ArrayList<>(newBinaryAssignment);
+        if (assignmentNotSatisfied) {
+            System.out.println("Unsatisfiable");
         }
     }
     public static boolean checkClauses(int numOfClauses, ArrayList<Boolean> trueOrFalseArray, ArrayList<Integer> assignments, ArrayList<Integer> clauseLengthList) {
-        ArrayList<Boolean> clauses = new ArrayList<>();
-        ArrayList<Boolean> individualClause;
-        int marker = 0;
-        for (int i = 0; i < numOfClauses; i++) {
-
-            individualClause = new ArrayList<>();
-            int clauseLength = clauseLengthList.get(i);
-            for (int j = marker; j < (marker + clauseLength); j++) {
-
-                int variableSelection = assignments.get(j);
-                boolean checkVar;
-                if(variableSelection > 0) {
-
-                    checkVar = trueOrFalseArray.get(variableSelection - 1);
-                    individualClause.add(checkVar);
-                } else {
-                    variableSelection *= - 1;
-
-                    checkVar = trueOrFalseArray.get(variableSelection - 1);
-                    individualClause.add(!checkVar);
-                }
-
+        int numOfVariables = trueOrFalseArray.size();
+        int maxVariations = calculateMaxVariations(numOfVariables);
+        for (int i = 0; i < maxVariations; i++) {
+            ArrayList<Boolean> currentAssignment = new ArrayList<>();
+            int n = i;
+            for (int j = 0; j < numOfVariables; j++) {
+                currentAssignment.add(n % 2 == 1);
+                n /= 2;
             }
-            marker += clauseLengthList.get(i);
-            if (individualClause.contains(true)) {
-                clauses.add(true);
-            } else {
-                clauses.add(false);
+            boolean allClausesSatisfied = true;
+            int marker = 0;
+            for (int j = 0; j < numOfClauses; j++) {
+                ArrayList<Boolean> individualClause = new ArrayList<>();
+                int clauseLength = clauseLengthList.get(j);
+                for (int k = marker; k < marker + clauseLength; k++) {
+                    int variableSelection = assignments.get(k);
+                    if (variableSelection > 0) {
+                        individualClause.add(currentAssignment.get(variableSelection - 1));
+                    } else {
+                        individualClause.add(!currentAssignment.get(-variableSelection - 1));
+                    }
+                }
+                marker += clauseLength;
+                boolean clauseSatisfied = false;
+                for (boolean clause : individualClause) {
+                    if (clause) {
+                        clauseSatisfied = true;
+                        break;
+                    }
+                }
+                if (!clauseSatisfied) {
+                    allClausesSatisfied = false;
+                    break;
+                }
+            }
+            if (allClausesSatisfied) {
+                displayClause(currentAssignment);
+                return false;
             }
         }
-
-        return clauses.contains(false);
+        return true;
     }
 
     public static ArrayList<Integer> createBinaryOfN(int numOfVariables) {
@@ -115,18 +104,6 @@ public class satisfiabilitychecker {
             startingAssignments.add(0);
         }
         return startingAssignments;
-    }
-    public static ArrayList<Integer> generateBinaryAssignment(ArrayList<Integer> startingAssignment) {
-        if(startingAssignment.contains(0)) {
-            int lastIndexOfZero = startingAssignment.lastIndexOf(0);
-            startingAssignment.set(lastIndexOfZero, 1);
-            for(int i = lastIndexOfZero + 1; i < startingAssignment.size(); i++) {
-                startingAssignment.set(i, 0);
-            }
-            return startingAssignment;
-        } else {
-            return startingAssignment;
-        }
     }
 
     public static ArrayList<Boolean> convertBinaryToTrueOrFalse(ArrayList<Integer> binaryArray) {
