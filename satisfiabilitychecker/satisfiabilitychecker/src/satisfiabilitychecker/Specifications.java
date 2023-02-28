@@ -50,10 +50,10 @@ public class Specifications {
     }
 
     public ArrayList<Integer> getGivenAssignments() {
-        return givenAssignments;
+        return this.givenAssignments;
     }
 
     public ArrayList<Integer> getListOfClauseLengths() {
-        return listOfClauseLengths;
+        return this.listOfClauseLengths;
     }
 }
