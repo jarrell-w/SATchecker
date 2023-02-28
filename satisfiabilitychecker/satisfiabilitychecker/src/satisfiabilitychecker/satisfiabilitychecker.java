@@ -18,7 +18,6 @@ public class satisfiabilitychecker {
 
         ArrayList<Integer> givenAssignments = getSpecs.getGivenAssignments();
         ArrayList<Integer> listOfClauseLengths = getSpecs.getListOfClauseLengths();
-        System.out.println(givenAssignments);
 
         ArrayList<Integer> startingBinary = createBinaryOfN(numOfVariables);
         assignmentNotSatisfied = checkClauses(numOfClauses, convertBinaryToTrueOrFalse(startingBinary), givenAssignments, listOfClauseLengths);
